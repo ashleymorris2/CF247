@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CF247TechTest.API.Data
 {
-    public class EfCustomerRepository : IRepository<CustomerEntity>
+    public class CustomerRepository : IRepository<CustomerEntity>
     {
         private readonly CustomerContext _context;
 
-        public EfCustomerRepository(CustomerContext context)
+        public CustomerRepository(CustomerContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
@@ -34,14 +34,27 @@ namespace CF247TechTest.API.Data
             return entity;
         }
 
-        public Task<CustomerEntity> UpdateAsync(CustomerEntity entity)
+        public async Task<CustomerEntity> UpdateAsync(CustomerEntity entity)
         {
-            throw new System.NotImplementedException();
+            if (!CustomerExists(entity.Id)) return null;
+            
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
-        public Task<CustomerEntity> DeleteAsync(int id)
+        public async Task<CustomerEntity> DeleteAsync(int id)
         {
-            throw new System.NotImplementedException();
+            if (!CustomerExists(id)) return null;
+            
+            var customerToRemove = await  _context.Customers.FindAsync(id);
+            _context.Remove(customerToRemove);
+            return customerToRemove;
+        }
+
+        private bool CustomerExists(int id)
+        {
+            return _context.Customers.Any(c => c.Id == id);
         }
     }
 }

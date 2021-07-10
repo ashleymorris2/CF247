@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CF247TechTest.API.Entities;
 using CF247TechTest.API.Models;
 
 namespace CF247TechTest.API.Profiles
@@ -7,7 +8,8 @@ namespace CF247TechTest.API.Profiles
     {
         public CustomerProfile()
         {
-            CreateMap<CustomerDto, CustomerDetailDto>();
+            CreateMap<CustomerDto, CustomerEntity>();
+            CreateMap<CustomerEntity, CustomerDetailDto>();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace CF247TechTest.API
                 .AddMvcOptions(options => options.OutputFormatters.Add(new XmlSerializerOutputFormatter()));
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddScoped<IRepository<CustomerEntity>, EfCustomerRepository>();
+            services.AddScoped<IRepository<CustomerEntity>, CustomerRepository>();
             services.AddDbContext<CustomerContext>(options =>
                 options.UseSqlServer(_configuration["ConnectionStrings:CustomerDBConnectionString"])
             );
