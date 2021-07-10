@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CF247TechTest.API.Data;
+using CF247TechTest.API.Entities;
 using CF247TechTest.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,10 +16,10 @@ namespace CF247TechTest.API.controllers
         private const string GetCustomerRouteName = "GetCustomer";
 
         private readonly ILogger<CustomersController> _logger;
-        private readonly IRepository<CustomerDetailDto> _repository;
+        private readonly IRepository<CustomerEntity> _repository;
         private readonly IMapper _mapper ;
         
-        public CustomersController(ILogger<CustomersController> logger, IRepository<CustomerDetailDto> repository, IMapper mapper)
+        public CustomersController(ILogger<CustomersController> logger, IRepository<CustomerEntity> repository, IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -27,17 +27,17 @@ namespace CF247TechTest.API.controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCustomersAsync()
+        public async Task<IActionResult> GetCustomers()
         {
             _logger.LogInformation("A request was made to retrieve all customers");
             
-            return Ok(await _repository.GetAll());
+            return Ok(await _repository.GetAllAsync());
         }
 
         [HttpGet("{id}", Name = GetCustomerRouteName)]
-        public async Task<IActionResult> GetCustomerAsync(int id)
+        public async Task<IActionResult> GetCustomer(int id)
         {
-            var customer = await  _repository.Get(id);
+            var customer = await _repository.GetAsync(id);
 
             if (customer == null)
             {
@@ -50,9 +50,9 @@ namespace CF247TechTest.API.controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCustomerAsync([FromBody] CustomerDto customer)
+        public async Task<IActionResult> CreateCustomer([FromBody] CustomerDto customer)
         {
-            var newCustomer = await _repository.Add(_mapper.Map<CustomerDetailDto>(customer));
+            var newCustomer = await _repository.AddAsync(_mapper.Map<CustomerEntity>(customer));
             
             _logger.LogInformation($"A new customer was created with the {newCustomer.Id}");
             
@@ -62,12 +62,10 @@ namespace CF247TechTest.API.controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCustomer(int id, [FromBody] CustomerDto customer)
         {
-            var newCustomer = _mapper.Map<CustomerDetailDto>(customer);
-            newCustomer.Id = id;
+            var customerToUpdate = _mapper.Map<CustomerEntity>(customer);
+            customerToUpdate.Id = id;
             
-            var updatedCustomer = await _repository.Update(newCustomer);
-            
-            if (updatedCustomer == null)
+            if (await _repository.UpdateAsync(customerToUpdate) == null)
             {
                 return NotFound();
             }
@@ -78,16 +76,13 @@ namespace CF247TechTest.API.controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteCustomer(int id)
+        public async Task<IActionResult> DeleteCustomer(int id)
         {
-            var customerToDelete = CustomerData.InMemoryCustomerData.Customers.FirstOrDefault(c => c.Id == id);
-            if (customerToDelete == null)
+            if (await _repository.DeleteAsync(id) == null)
             {
                 return NotFound();
             }
-
-            CustomerData.InMemoryCustomerData.Customers.Remove(customerToDelete);
-
+            
             _logger.LogInformation($"Customer was cid {id} has been deleted");
             
             return NoContent();

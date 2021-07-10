@@ -6,7 +6,7 @@ namespace CF247TechTest.API
     public class CustomerData
     {
         public static CustomerData InMemoryCustomerData { get; } = new CustomerData();
-        
+
         public List<CustomerDetailDto> Customers { get; }
 
         private CustomerData()
@@ -28,9 +28,9 @@ namespace CF247TechTest.API
                 },
                 new CustomerDetailDto()
                 {
-                Id = 4, FirstName = "Barry", Surname = "Hill", Email = "helen@gmail.com",
-                Password = "lemonandlime"
-            }
+                    Id = 4, FirstName = "Barry", Surname = "Hill", Email = "helen@gmail.com",
+                    Password = "lemonandlime"
+                }
             };
         }
     }

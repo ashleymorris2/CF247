@@ -7,18 +7,17 @@ namespace CF247TechTest.API.Data
 {
     public class InMemoryRepository : IRepository<CustomerDetailDto>
     {
-        public Task<List<CustomerDetailDto>> GetAll()
+        public async Task<IEnumerable<CustomerDetailDto>> GetAllAsync()
         {
-            return Task.FromResult(CustomerData.InMemoryCustomerData.Customers);
+            return await Task.FromResult(CustomerData.InMemoryCustomerData.Customers);
         }
 
-        public Task<CustomerDetailDto> Get(int id)
+        public Task<CustomerDetailDto> GetAsync(int id)
         {
             return Task.FromResult(CustomerData.InMemoryCustomerData.Customers.FirstOrDefault(c => c.Id == id));
         }
-
         
-        public async Task<CustomerDetailDto> Add(CustomerDetailDto entity)
+        public Task<CustomerDetailDto> AddAsync(CustomerDetailDto entity)
         {
             var maxCustomerId = CustomerData.InMemoryCustomerData.Customers.Max(c => c.Id);
 
@@ -27,10 +26,10 @@ namespace CF247TechTest.API.Data
             
             CustomerData.InMemoryCustomerData.Customers.Add(newCustomer);
 
-            return await Task.FromResult(newCustomer);
+            return Task.FromResult(newCustomer);
         }
 
-        public async Task<CustomerDetailDto> Update(CustomerDetailDto entity)
+        public async Task<CustomerDetailDto> UpdateAsync(CustomerDetailDto entity)
         {
             var customerToUpdate = CustomerData.InMemoryCustomerData.Customers.FirstOrDefault(c => c.Id == entity.Id);
 
@@ -45,9 +44,16 @@ namespace CF247TechTest.API.Data
             return await Task.FromResult(customerToUpdate);
         }
 
-        public Task<CustomerDetailDto> Delete(CustomerDetailDto entity)
+        public async Task<CustomerDetailDto> DeleteAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var customerToDelete = CustomerData.InMemoryCustomerData.Customers.FirstOrDefault(c => c.Id == id);
+            
+            if (customerToDelete != null)
+            {
+                CustomerData.InMemoryCustomerData.Customers.Remove(customerToDelete);
+            }
+            
+            return await Task.FromResult(customerToDelete);
         }
     }
 }
