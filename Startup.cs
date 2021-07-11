@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using CF247TechTest.API.Data;
 using CF247TechTest.API.Data.Contexts;
 using CF247TechTest.API.Entities;
-using CF247TechTest.API.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -37,7 +37,7 @@ namespace CF247TechTest.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, CustomerContext context)
         {
             if (env.IsDevelopment())
             {
@@ -46,6 +46,11 @@ namespace CF247TechTest.API
             else
             {
                 app.UseExceptionHandler("/");
+            }
+
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                context.Database.Migrate();   
             }
             
             app.UseMvc();
