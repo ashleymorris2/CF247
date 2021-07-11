@@ -24,7 +24,9 @@ $ docker-compose up
 ```
 
 ## Usage instructions
-Testing can be done using [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/) or a similar rest api testing client. Whilst running in docker the api uses http for requests and is listening on port `5001` by default. This can be changed in the docker-compose file if necessary.
+Testing can be done using [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/) or a similar rest api testing client. 
+
+Whilst running in docker the api uses http for requests and is listening on port `5001` by default. This can be changed in the docker-compose file if necessary.
 
 ---
 
