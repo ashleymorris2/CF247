@@ -12,14 +12,6 @@ namespace CF247TechTest.API
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
-
-            var host = CreateWebHostBuilder(args).Build();
-
-            using (var scope = host.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetService<CustomerContext>();
-                context.Database.Migrate();
-            }
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

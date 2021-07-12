@@ -10,6 +10,7 @@ namespace CF247TechTest.API.Data.Contexts
 
         public CustomerContext(DbContextOptions options) : base(options)
         {
+            Database.EnsureCreated();
         }
     }
 }
