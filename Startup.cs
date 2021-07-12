@@ -37,7 +37,7 @@ namespace CF247TechTest.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, CustomerContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -46,11 +46,6 @@ namespace CF247TechTest.API
             else
             {
                 app.UseExceptionHandler("/");
-            }
-
-            if (context.Database.GetPendingMigrations().Any())
-            {
-                context.Database.Migrate();   
             }
             
             app.UseMvc();
